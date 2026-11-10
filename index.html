@@ -4,421 +4,876 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>AMIR FOOTBALL 3D V6.0.0</title>
+<title>AMIR FOOTBALL 3D | V8.0.0</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#07130d;color:white;font-family:Arial,sans-serif;touch-action:none}
+body{margin:0;overflow:hidden;background:#07120e;color:white;font-family:Tahoma,Arial,sans-serif}
+#game{position:fixed;inset:0}
 canvas{display:block}
-#brand{position:absolute;top:10px;left:12px;z-index:5;font-weight:bold;font-size:12px;text-shadow:0 2px 6px #000}
-#brand span{color:#5dffad}
-#hud{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:5;background:#07140ddd;border:1px solid #ffffff40;border-radius:14px;padding:8px 13px;display:flex;gap:12px;align-items:center;white-space:nowrap}
-#score{font-size:23px;font-weight:900}
-#clock{color:#8dffbb;font-size:13px}
-#info{position:absolute;top:65px;left:50%;transform:translateX(-50%);z-index:5;background:#06150cdd;border-radius:20px;padding:7px 13px;font-size:11px;white-space:nowrap}
-#tools{position:absolute;right:10px;top:100px;z-index:8;display:grid;gap:6px}
-.small,.action{border:1px solid #ffffff55;color:white;background:#102c1dE8;border-radius:12px;padding:10px;font-weight:bold}
-#controls{position:absolute;bottom:15px;left:0;right:0;z-index:8;display:flex;justify-content:space-between;align-items:end;padding:0 12px;pointer-events:none}
-#stickArea{width:140px;height:140px;position:relative;pointer-events:auto}
-#stickBase{position:absolute;inset:8px;width:124px;height:124px;border-radius:50%;background:#ffffff19;border:2px solid #ffffff66}
-#stick{position:absolute;width:50px;height:50px;left:45px;top:45px;border-radius:50%;background:linear-gradient(145deg,#fff,#9dbbaa);box-shadow:0 3px 12px #0009}
-#buttons{display:grid;grid-template-columns:repeat(2,62px);gap:7px;pointer-events:auto}
-.action{height:55px;font-size:11px;padding:4px}
-#shoot{background:#bd3827}
-#pass{background:#1769b2}
-#sprint{background:#167b47}
-#radar{position:absolute;bottom:170px;left:50%;transform:translateX(-50%);width:125px;height:74px;background:#12653b;border:1px solid #ffffff88;border-radius:8px;z-index:6}
-#overlay,#settings{position:absolute;inset:0;z-index:20;background:#06140ef2;display:flex;align-items:center;justify-content:center;padding:18px}
-.panel{width:min(430px,95vw);padding:25px;background:#13291f;border:1px solid #ffffff44;border-radius:22px;text-align:center}
-.panel h1{font-size:25px;margin:5px}
-.panel p{font-size:13px;color:#d0e4d8;line-height:2}
-.primary{width:100%;border:0;border-radius:13px;padding:15px;background:linear-gradient(90deg,#14a766,#64e89d);font-size:16px;font-weight:bold}
-#settings{display:none}
-#settings .panel{text-align:right}
-#settings select{width:100%;padding:10px;border-radius:8px;margin:5px 0}
-#toast{display:none;position:absolute;z-index:15;top:44%;left:50%;transform:translate(-50%,-50%);background:#06140eee;padding:13px 22px;border-radius:14px;white-space:nowrap}
+#top{
+position:fixed;top:10px;left:50%;transform:translateX(-50%);
+display:flex;align-items:center;gap:12px;padding:10px 18px;
+background:#07130ee8;border:1px solid #ffffff30;border-radius:14px;
+z-index:5;white-space:nowrap;box-shadow:0 5px 25px #0008
+}
+.team{font-weight:bold;font-size:13px}
+#score{font-size:27px;font-weight:900;letter-spacing:3px}
+#clock{font-size:15px;color:#b7ffca}
+#brand{
+position:fixed;top:12px;left:12px;z-index:5;
+background:#07130edb;padding:9px 12px;border-radius:10px;
+font-size:11px;line-height:1.8;border:1px solid #ffffff22
+}
+#stats{
+position:fixed;top:90px;right:12px;z-index:5;
+background:#07130edb;padding:12px;border-radius:12px;
+font-size:11px;line-height:2.2;min-width:125px;
+border:1px solid #ffffff22
+}
+#radar{
+position:fixed;top:90px;left:12px;width:130px;height:88px;
+background:#092e1e;border:2px solid #b8d4bd;border-radius:8px;z-index:5
+}
+#radar canvas{width:100%;height:100%}
+#staminaBox{
+position:fixed;bottom:115px;left:50%;transform:translateX(-50%);
+width:145px;height:7px;background:#222;border-radius:8px;overflow:hidden;z-index:5
+}
+#stamina{height:100%;width:100%;background:#56ef8c;transition:width .1s}
+#controls{
+position:fixed;bottom:18px;left:0;right:0;z-index:8;
+display:flex;justify-content:space-between;align-items:end;
+padding:0 18px;pointer-events:none
+}
+#stickArea{width:145px;height:145px;position:relative;pointer-events:auto;touch-action:none}
+#stickBase{
+position:absolute;inset:8px;border-radius:50%;
+background:#ffffff1b;border:2px solid #ffffff55
+}
+#stick{
+position:absolute;width:57px;height:57px;border-radius:50%;
+left:44px;top:44px;background:#ffffff85;border:2px solid white;
+box-shadow:0 3px 12px #0008;pointer-events:none
+}
+#buttons{
+display:grid;grid-template-columns:repeat(3,65px);gap:8px;
+pointer-events:auto;direction:ltr
+}
+.action{
+width:65px;height:59px;border-radius:17px;border:1px solid #ffffff60;
+background:#101d1be8;color:white;font-weight:bold;font-size:11px;
+box-shadow:0 4px 10px #0007;touch-action:none
+}
+.action:active{background:#198c55;transform:scale(.94)}
+.primary{background:#087d43}
+#menu{
+position:fixed;right:12px;bottom:12px;z-index:9;
+display:flex;gap:5px;flex-wrap:wrap;max-width:calc(100% - 24px)
+}
+.small{
+border:1px solid #ffffff55;border-radius:9px;padding:8px 10px;
+background:#07130eea;color:white;font-size:11px
+}
+#panel{
+display:none;position:fixed;inset:0;z-index:20;
+background:#000b;align-items:center;justify-content:center;padding:15px
+}
+#panelContent{
+width:min(420px,100%);max-height:85vh;overflow:auto;
+background:#10251b;border:1px solid #6bffad66;
+border-radius:18px;padding:20px;box-shadow:0 10px 40px #000
+}
+#panelContent h2{margin-top:0;color:#76ffad}
+.setting{
+display:flex;justify-content:space-between;align-items:center;
+gap:12px;padding:9px 0;border-bottom:1px solid #ffffff18;font-size:13px
+}
+select{background:#193e2c;color:white;padding:7px;border:1px solid #ffffff44;border-radius:8px}
+#message{
+position:fixed;top:48%;left:50%;transform:translate(-50%,-50%);
+font-size:32px;font-weight:900;text-shadow:0 3px 12px #000;
+z-index:10;pointer-events:none;text-align:center
+}
 @media(max-width:600px){
- #buttons{grid-template-columns:repeat(2,57px)}
- .action{height:51px}
- #stickArea{transform:scale(.9);transform-origin:bottom left}
- #radar{bottom:160px}
+#top{top:8px;gap:7px;padding:8px 10px}
+#score{font-size:22px}
+.team{font-size:10px}
+#clock{font-size:12px}
+#brand{font-size:9px}
+#stats{top:78px;font-size:9px;min-width:105px;padding:7px}
+#radar{top:78px;width:105px;height:72px}
+#controls{padding:0 8px}
+#stickArea{width:125px;height:125px}
+#stick{left:34px;top:34px}
+#buttons{grid-template-columns:repeat(3,56px);gap:6px}
+.action{width:56px;height:51px;font-size:10px}
+#staminaBox{bottom:105px}
 }
 </style>
 </head>
 <body>
-<div id="brand">AMIR <span>FOOTBALL 3D</span><br>AMIRREZA GHOLAMI · V6.0.0</div>
-<div id="hud"><b>AMIR FC</b><span id="score">0 - 0</span><b>RIVALS</b><span id="clock">00:00</span></div>
-<div id="info">برای شروع مسابقه آماده شو</div>
-<div id="tools">
-<button class="small" id="pause">Ⅱ توقف</button>
-<button class="small" id="cameraBtn">◉ دوربین</button>
-<button class="small" id="settingsBtn">⚙ تنظیمات</button>
+<div id="game"></div>
+
+<div id="brand">
+<b>AMIR FOOTBALL 3D</b><br>
+V8.0.0<br>
+AMIRREZA GHOLAMI
 </div>
-<canvas id="radar" width="250" height="148"></canvas>
+
+<div id="top">
+<span class="team" style="color:#64b9ff">AMIR FC</span>
+<span id="score">0 - 0</span>
+<span class="team" style="color:#ff8b8b">RIVALS</span>
+<span id="clock">00:00</span>
+</div>
+
+<div id="stats">
+<b>آمار مسابقه</b><br>
+مالکیت: <span id="possession">50%</span><br>
+پاس موفق: <span id="passes">0</span><br>
+شوت: <span id="shots">0</span><br>
+گل: <span id="goals">0</span><br>
+تکل: <span id="tackles">0</span>
+</div>
+
+<div id="radar"><canvas id="radarCanvas" width="260" height="176"></canvas></div>
+<div id="staminaBox"><div id="stamina"></div></div>
+
+<div id="message"> </div>
+
 <div id="controls">
-<div id="stickArea"><div id="stickBase"></div><div id="stick"></div></div>
+<div id="stickArea">
+<div id="stickBase"></div>
+<div id="stick"></div>
+</div>
 <div id="buttons">
-<button class="action" id="pass">پاس</button>
-<button class="action" id="shoot">شوت</button>
-<button class="action" id="sprint">سرعت</button>
-<button class="action" id="switch">تعویض</button>
-<button class="action" id="through">پاس عمقی</button>
-<button class="action" id="lob">شوت هوایی</button>
-<button class="action" id="tackle">توپ‌گیری</button>
-<button class="action" id="dribble">دریبل</button>
+<button class="action primary" data-action="shoot">شوت ⚽</button>
+<button class="action" data-action="pass">پاس</button>
+<button class="action" data-action="through">عمقی</button>
+<button class="action" data-action="lob">هوایی</button>
+<button class="action" data-action="sprint">سرعت</button>
+<button class="action" data-action="switch">تعویض</button>
+<button class="action" data-action="tackle">تکل</button>
+<button class="action" data-action="dribble">دریبل</button>
+<button class="action" data-action="pause">توقف</button>
 </div>
 </div>
-<div id="toast"></div>
-<div id="overlay">
-<div class="panel">
-<h1>⚽ AMIR FOOTBALL 3D</h1>
-<b style="color:#62f4a0">VERSION 6.0.0</b>
-<p>AMIR FC در برابر RIVALS<br>مسابقه سه‌بعدی فوتبال<br>Created by AMIRREZA GHOLAMI</p>
-<button class="primary" id="start">شروع مسابقه</button>
+
+<div id="menu">
+<button class="small" id="settingsBtn">⚙ تنظیمات</button>
+<button class="small" id="cameraBtn">📷 دوربین</button>
+<button class="small" id="restartBtn">↻ شروع مجدد</button>
 </div>
-</div>
-<div id="settings">
-<div class="panel">
+
+<div id="panel">
+<div id="panelContent">
 <h2>تنظیمات مسابقه</h2>
-<label>مدت مسابقه</label>
-<select id="duration"><option value="180">۳ دقیقه</option><option value="300">۵ دقیقه</option><option value="600">۱۰ دقیقه</option></select>
-<label>سرعت بازی</label>
-<select id="speed"><option value="1">عادی</option><option value="1.2">سریع</option><option value=".8">آرام</option></select>
-<button class="primary" id="closeSettings">بازگشت</button>
+<div class="setting">سطح هوش مصنوعی
+<select id="difficulty">
+<option value="0.75">آسان</option>
+<option value="1" selected>معمولی</option>
+<option value="1.3">سخت</option>
+</select></div>
+<div class="setting">مدت مسابقه
+<select id="duration">
+<option value="180">۳ دقیقه</option>
+<option value="300" selected>۵ دقیقه</option>
+<option value="600">۱۰ دقیقه</option>
+<option value="900">۱۵ دقیقه</option>
+</select></div>
+<div class="setting">نمایش تماشاگران
+<input type="checkbox" id="crowdToggle" checked></div>
+<div class="setting">سایه‌ها
+<input type="checkbox" id="shadowToggle" checked></div>
+<div class="setting">حالت تمرینی
+<input type="checkbox" id="practiceToggle"></div>
+<div class="setting">صدای بازی
+<input type="checkbox" id="soundToggle" checked></div>
+<div class="setting">سبک تاکتیکی
+<select id="tactics">
+<option value="balanced">متعادل</option>
+<option value="attack">هجومی</option>
+<option value="defend">دفاعی</option>
+</select></div>
+<p style="font-size:11px;line-height:2;color:#c4d8cc">
+کیبورد: حرکت با W A S D یا جهت‌ها، پاس J، شوت K،
+پاس عمقی I، توپ هوایی L، سرعت Space و تعویض Q.
+</p>
+<button class="small" id="closePanel" style="width:100%;padding:12px">بازگشت به بازی</button>
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
+(() => {
 "use strict";
-/* AMIR FOOTBALL 3D V6.0.0
-   Created by AMIRREZA GHOLAMI
-*/
-const $=id=>document.getElementById(id);
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x91c7e7);
-scene.fog=new THREE.Fog(0x91c7e7,110,220);
-const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,350);
-camera.position.set(0,48,66);
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
+
+const $ = id => document.getElementById(id);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x86b8d1);
+scene.fog = new THREE.Fog(0x86b8d1, 90, 190);
+
+const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, .1, 300);
+camera.position.set(0,25,38);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(innerWidth,innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.1;
-document.body.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xffffff,0x315b3b,2));
-const sun=new THREE.DirectionalLight(0xffffff,2.5);
-sun.position.set(-35,65,30);sun.castShadow=true;
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+$("game").appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xc9e9ff,0x28432b,2));
+const sun = new THREE.DirectionalLight(0xffffff,2.2);
+sun.position.set(-25,45,30);
+sun.castShadow = true;
 sun.shadow.mapSize.set(2048,2048);
-sun.shadow.camera.left=-65;sun.shadow.camera.right=65;
-sun.shadow.camera.top=65;sun.shadow.camera.bottom=-65;
+sun.shadow.camera.left=-65;
+sun.shadow.camera.right=65;
+sun.shadow.camera.top=65;
+sun.shadow.camera.bottom=-65;
 scene.add(sun);
-const mat=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
-const white=mat(0xffffff),blue=mat(0x176bd0),red=mat(0xd52e3a);
-const grass=new THREE.Mesh(new THREE.PlaneGeometry(106,70),mat(0x237a40));
-grass.rotation.x=-Math.PI/2;grass.receiveShadow=true;scene.add(grass);
+
+const mat = (color,rough=.8) => new THREE.MeshStandardMaterial({color,roughness:rough});
+const grassMat = mat(0x237d3c);
+const lineMat = new THREE.MeshBasicMaterial({color:0xffffff});
+const blueMat = mat(0x087bd0,.55);
+const redMat = mat(0xc72d39,.55);
+const skinMat = mat(0xdca77e);
+const darkMat = mat(0x17212a);
+const ballMat = mat(0xffffff,.35);
+const blackMat = mat(0x171717,.6);
+
+function box(parent,w,h,d,material,x=0,y=0,z=0){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+ m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;
+}
+function sphere(parent,r,material,x=0,y=0,z=0){
+ const m=new THREE.Mesh(new THREE.SphereGeometry(r,14,12),material);
+ m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m;
+}
+
+// زمین فوتبال
+const field = box(scene,106,.2,70,grassMat,0,-.12,0);
+field.receiveShadow=true;
+
 for(let i=0;i<10;i++){
- let s=new THREE.Mesh(new THREE.PlaneGeometry(10.6,70),mat(i%2?0x287f43:0x206e3c));
- s.rotation.x=-Math.PI/2;s.position.set(-47.7+i*10.6,.012,0);scene.add(s);
+ box(scene,10.5,.012,70,mat(i%2?0x278b43:0x1d7137),-47.7+i*10.6,.0,0);
 }
-function pitchLine(x,z,w,h){
- const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),white);
- m.rotation.x=-Math.PI/2;m.position.set(x,.035,z);scene.add(m);
+function line(w,d,x,z){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,.025,d),lineMat);
+ m.position.set(x,.025,z);scene.add(m);
 }
-pitchLine(0,0,.14,64);pitchLine(-50,0,.14,64);pitchLine(50,0,.14,64);
-pitchLine(0,-32,100,.14);pitchLine(0,32,100,.14);
-const centerCircle=new THREE.Mesh(new THREE.RingGeometry(9.1,9.25,64),white);
-centerCircle.rotation.x=-Math.PI/2;centerCircle.position.y=.04;scene.add(centerCircle);
-const dot=new THREE.Mesh(new THREE.CircleGeometry(.24,24),white);
-dot.rotation.x=-Math.PI/2;dot.position.y=.045;scene.add(dot);
-for(let side of [-1,1]){
- pitchLine(side*39,0,.12,36);pitchLine(side*39,0,22,.12);
- pitchLine(side*44,0,.12,18);pitchLine(side*44,0,12,.12);
+line(106,.12,0,-35);
+line(106,.12,0,35);
+line(.12,70,-53,0);
+line(.12,70,53,0);
+line(.12,70,0,0);
+const circle=new THREE.Mesh(new THREE.RingGeometry(9.05,9.18,64),lineMat);
+circle.rotation.x=-Math.PI/2;circle.position.y=.04;scene.add(circle);
+sphere(scene,.13,lineMat,0,.06,0);
+
+for(const z of [-35,35]){
+ box(scene,40,.03,.12,lineMat,0,.035,z);
+ box(scene,.12,.03,16,lineMat,-20,.035,z+(z<0?8:-8));
+ box(scene,.12,.03,16,lineMat,20,.035,z+(z<0?8:-8));
+ box(scene,16,.03,.12,lineMat,0,.035,z+(z<0?16:-16));
 }
-const crowdMats=[0xdceaf2,0xe34b4b,0x2477cf,0xe5c34b,0x222b38].map(c=>mat(c));
-for(let side of [-1,1]){
- const stand=new THREE.Mesh(new THREE.BoxGeometry(110,9,13),mat(0x53616b));
- stand.position.set(0,5.5,side*40);scene.add(stand);
- for(let row=0;row<4;row++)for(let i=0;i<90;i++){
-  const person=new THREE.Mesh(new THREE.BoxGeometry(.48,.65,.42),crowdMats[(i+row)%5]);
-  person.position.set(-53+i*1.2,10+row*.85,side*(35+row*1.8));scene.add(person);
+
+// محوطه جریمه
+for(const sign of [-1,1]){
+ const z=sign*35;
+ line(40,.12,0,z);
+ line(.12,16,-20,z-sign*8);
+ line(.12,16,20,z-sign*8);
+ line(40,.12,0,z-sign*16);
+ line(20,.12,0,z-sign*5.5);
+ line(.12,11,-10,z-sign*5.5);
+ line(.12,11,10,z-sign*5.5);
+}
+
+// دروازه و تور
+const goalParts=[];
+function makeGoal(z){
+ const direction=z<0?-1:1;
+ const metal=mat(0xf1f3f5,.35);
+ const net= new THREE.MeshStandardMaterial({color:0xdde8e4,wireframe:true});
+ const g=new THREE.Group();
+ const back=z+direction*5;
+ box(g,.18,4.8,.18,metal,-4.5,2.4,0);
+ box(g,.18,4.8,.18,metal,4.5,2.4,0);
+ box(g,9.1,.18,.18,metal,0,4.8,0);
+ const cage=new THREE.Mesh(new THREE.BoxGeometry(9,4.6,5),net);
+ cage.position.set(0,2.3,direction*2.5);g.add(cage);
+ g.position.z=z;
+ scene.add(g);goalParts.push(g);
+}
+makeGoal(-35);makeGoal(35);
+
+// سکوها
+const standMat=mat(0x344554);
+for(const side of [-1,1]){
+ const stand=box(scene,118,7,12,standMat,side*0,3.5,side*44);
+ stand.position.x=0;
+ for(let row=0;row<5;row++){
+  box(scene,118,.25,1.5,mat(row%2?0x455c6c:0x263b4a),0,1+row*1.2,side*(38+row*2.3));
  }
 }
-// Goals
-for(const x of [-51,51]){
- const goal=new THREE.Group(),pm=mat(0xffffff,.3);
- function bar(a,b,r=.17){
-  const d=new THREE.Vector3().subVectors(b,a);
-  const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,d.length(),10),pm);
-  m.position.copy(a).add(b).multiplyScalar(.5);
-  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());goal.add(m);
- }
- bar(new THREE.Vector3(x,0,-8),new THREE.Vector3(x,5,-8));
- bar(new THREE.Vector3(x,0,8),new THREE.Vector3(x,5,8));
- bar(new THREE.Vector3(x,5,-8),new THREE.Vector3(x,5,8));
- for(let z=-8;z<=8;z+=2)bar(new THREE.Vector3(x,0,z),new THREE.Vector3(x+(x>0?4:-4),4,z),.045);
- scene.add(goal);
+
+// تماشاگران
+const crowd=new THREE.Group();
+const crowdColors=[0xe7e7e7,0xe0bb45,0x2585cb,0xd84d55,0x42b878,0x333333];
+for(let i=0;i<650;i++){
+ const x=(Math.random()-.5)*110;
+ const z=(Math.random()<.5?-1:1)*(39+Math.random()*10);
+ const y=2+Math.random()*4;
+ const person=sphere(crowd,.22,mat(crowdColors[i%crowdColors.length]),x,y,z);
+ person.scale.y=1.5;
 }
-// Ball
-const ball=new THREE.Group();
-const core=new THREE.Mesh(new THREE.SphereGeometry(.85,32,24),mat(0xffffff,.35));
-core.castShadow=true;ball.add(core);
-const black=mat(0x11151a,.45);
+scene.add(crowd);
+
+// نورافکن‌ها
+const lampMat= new THREE.MeshBasicMaterial({color:0xffffff});
+for(const x of [-48,48]){
+ for(const z of [-31,31]){
+  box(scene,.35,22,.35,mat(0x46515a),x,11,z);
+  box(scene,5,.5,1,lampMat,x,22,z);
+ }
+}
+
+// بازیکنان
+const players=[];
+let selected=null;
+let playerId=0;
+
+function makePlayer(team,index,x,z,keeper=false){
+ const group=new THREE.Group();
+ const jersey=team===0?blueMat:redMat;
+ const body=box(group,1.0,1.25,.55,jersey,0,1.35,0);
+ const shorts=box(group,.88,.45,.55,darkMat,0,.5,0);
+ const head=sphere(group,.34,skinMat,0,2.25,0);
+ const hair=sphere(group,.35,darkMat,0,2.48,0);
+ hair.scale.set(1,.4,1);
+ const leftArm=box(group,.23,.9,.25,skinMat,-.64,1.35,0);
+ const rightArm=box(group,.23,.9,.25,skinMat,.64,1.35,0);
+ const leftLeg=box(group,.28,.9,.3,darkMat,-.25,-.05,0);
+ const rightLeg=box(group,.28,.9,.3,darkMat,.25,-.05,0);
+ const leftBoot=box(group,.32,.2,.5,mat(0x101318),-.25,-.52,-.08);
+ const rightBoot=box(group,.32,.2,.5,mat(0x101318),.25,-.52,-.08);
+ const numberCanvas=document.createElement("canvas");
+ numberCanvas.width=128;numberCanvas.height=128;
+ const ctx=numberCanvas.getContext("2d");
+ ctx.fillStyle="white";ctx.font="bold 76px Arial";
+ ctx.textAlign="center";ctx.textBaseline="middle";
+ ctx.fillText(String(index+1),64,64);
+ const tex=new THREE.CanvasTexture(numberCanvas);
+ const number=new THREE.Mesh(new THREE.PlaneGeometry(.45,.45),new THREE.MeshBasicMaterial({map:tex,transparent:true}));
+ number.position.set(0,1.4,-.285);group.add(number);
+ group.position.set(x,0,z);scene.add(group);
+ const p={
+  id:playerId++,team,index,group,body,leftArm,rightArm,leftLeg,rightLeg,
+  x,z,vx:0,vz:0,dir:new THREE.Vector3(0,0,team===0?-1:1),
+  keeper,stamina:100,number
+ };
+ players.push(p);return p;
+}
+
+const formations=[
+ [[0,25],[13,17],[-13,17],[24,5],[-24,5],[0,8],[12,-3],[-12,-3],[25,-17],[-25,-17],[0,-24]],
+ [[0,-25],[13,-17],[-13,-17],[24,-5],[-24,-5],[0,-8],[12,3],[-12,3],[25,17],[-25,17],[0,24]]
+];
+for(let t=0;t<2;t++){
+ formations[t].forEach((p,i)=>{
+  const keeper=i===0;
+  const player=makePlayer(t,i,p[0],p[1],keeper);
+  player.formationX=p[0];player.formationZ=p[1];
+ });
+}
+selected=players.find(p=>p.team===0&&p.index===9);
+
+// توپ با پنل‌های سیاه
+const ballGroup=new THREE.Group();
+const ball=sphere(ballGroup,.48,ballMat,0,0,0);
 for(let i=0;i<12;i++){
- const phi=Math.acos(1-2*(i+.5)/12),theta=i*2.399;
- const patch=new THREE.Mesh(new THREE.CircleGeometry(.19,5),black);
- patch.position.set(.855*Math.sin(phi)*Math.cos(theta),.855*Math.cos(phi),.855*Math.sin(phi)*Math.sin(theta));
- patch.lookAt(patch.position.clone().multiplyScalar(2));ball.add(patch);
+ const a=i*Math.PI*2/12;
+ const patch=new THREE.Mesh(new THREE.CircleGeometry(.105,5),blackMat);
+ patch.position.set(Math.cos(a)*.34,Math.sin(a)*.34,.36);
+ patch.lookAt(new THREE.Vector3(Math.cos(a),Math.sin(a),1.5));
+ ballGroup.add(patch);
 }
-scene.add(ball);
-const shadow=new THREE.Mesh(new THREE.CircleGeometry(1.1,28),new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.28}));
-shadow.rotation.x=-Math.PI/2;shadow.position.y=.035;scene.add(shadow);
-const bp=new THREE.Vector3(0,.85,0),bv=new THREE.Vector3();
-// Players
-const home=[],away=[];
-function player(team,i,x,z){
- const g=new THREE.Group(),shirt=new THREE.Mesh(new THREE.CylinderGeometry(.48,.55,1.15,14),team?red:blue);
- shirt.position.y=1.35;shirt.castShadow=true;g.add(shirt);
- const shorts=new THREE.Mesh(new THREE.BoxGeometry(.8,.38,.55),mat(0x151c28));shorts.position.y=.65;g.add(shorts);
- const skin=mat(0xe3b18d),head=new THREE.Mesh(new THREE.SphereGeometry(.3,16,14),skin);
- head.position.y=2.15;g.add(head);
- const hair=new THREE.Mesh(new THREE.SphereGeometry(.31,14,10),mat(0x30231c));
- hair.scale.set(1,.55,1);hair.position.y=2.35;g.add(hair);
- for(const side of [-1,1]){
-  const leg=new THREE.Mesh(new THREE.CylinderGeometry(.13,.12,.65,10),skin);
-  leg.position.set(side*.23,.22,0);g.add(leg);
-  const boot=new THREE.Mesh(new THREE.BoxGeometry(.28,.15,.45),mat(0x101820));
-  boot.position.set(side*.23,-.08,.12);g.add(boot);
-  const arm=new THREE.Mesh(new THREE.CylinderGeometry(.12,.11,.8,10),skin);
-  arm.position.set(side*.58,1.35,0);arm.rotation.z=side*.15;g.add(arm);
+ballGroup.position.set(0,.5,0);
+scene.add(ballGroup);
+
+const shadow=new THREE.Mesh(
+ new THREE.CircleGeometry(.65,24),
+ new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.25})
+);
+shadow.rotation.x=-Math.PI/2;shadow.position.y=.015;scene.add(shadow);
+
+const state={
+ score:[0,0],time:0,duration:300,paused:false,finished:false,
+ owner:null,ballV:new THREE.Vector3(),height:0,vertical:0,
+ cameraMode:0,difficulty:1,practice:false,tactics:"balanced",
+ stats:{passes:0,shots:0,goals:0,tackles:0},
+ sound:true, crowd:true
+};
+
+let joystick={x:0,y:0,active:false};
+let keys={};
+let lastTime=performance.now();
+let actionCooldown=0;
+let kickOffMessage=0;
+let audioContext=null;
+
+function sound(freq=440,duration=.1){
+ if(!state.sound)return;
+ try{
+  audioContext=audioContext||new(window.AudioContext||window.webkitAudioContext)();
+  const osc=audioContext.createOscillator();
+  const gain=audioContext.createGain();
+  osc.frequency.value=freq;
+  gain.gain.setValueAtTime(.08,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+duration);
+  osc.connect(gain);gain.connect(audioContext.destination);
+  osc.start();osc.stop(audioContext.currentTime+duration);
+ }catch(e){}
+}
+
+function setMessage(text,seconds=1){
+ $("message").textContent=text;
+ kickOffMessage=seconds;
+}
+function nearestPlayer(team,x=ballGroup.position.x,z=ballGroup.position.z){
+ let best=null,dist=Infinity;
+ for(const p of players){
+  if(p.team!==team)continue;
+  const d=Math.hypot(p.x-x,p.z-z);
+  if(d<dist){dist=d;best=p}
  }
- g.position.set(x,0,z);scene.add(g);
- const p={group:g,team,index:i,x,z,vx:0,vz:0,stamina:100,speed:team?7.5:8.2,homeX:x,homeZ:z};
- (team?away:home).push(p);
-}
-const formation=[[-44,0],[-34,-19],[-34,-7],[-34,7],[-34,19],[-20,-20],[-19,-7],[-19,7],[-20,20],[-7,-9],[-7,9]];
-formation.forEach((p,i)=>player(0,i,p[0],p[1]));
-formation.forEach((p,i)=>player(1,i,-p[0],p[1]));
-let selected=9,owner=0,carrier=9;
-let homeScore=0,awayScore=0,elapsed=0,duration=180,speedScale=1;
-let running=false,paused=false,finished=false,cameraMode=0;
-let joystick={x:0,y:0},sprinting=false,keys=new Set(),toastTime=0;
-function toast(t){$("toast").textContent=t;$("toast").style.display="block";toastTime=1.3}
-function distance(a,b){return Math.hypot(a.x-b.x,a.z-b.z)}
-function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-function nearestHome(){
- let best=0,d=Infinity;
- home.forEach((p,i)=>{let n=distance(p,bp);if(n<d){d=n;best=i}});
  return best;
 }
-function updateHUD(){
- $("score").textContent=homeScore+" - "+awayScore;
- const s=Math.max(0,Math.floor(duration-elapsed));
- $("clock").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
- $("info").textContent="بازیکن "+(selected+1)+" | "+(owner===0?"مالکیت AMIR FC":owner===1?"مالکیت حریف":"توپ آزاد");
+function distance(a,b){return Math.hypot(a.x-b.x,a.z-b.z)}
+function possession(p){
+ state.owner=p;
 }
+function releaseBall(vx,vz,up=0){
+ state.owner=null;
+ state.ballV.set(vx,0,vz);
+ state.vertical=up;
+}
+function playerDirection(p,dx,dz){
+ if(Math.hypot(dx,dz)>.05)p.dir.set(dx,0,dz).normalize();
+ p.group.rotation.y=Math.atan2(p.dir.x,p.dir.z);
+}
+function movePlayer(p,dx,dz,dt,speed){
+ const len=Math.hypot(dx,dz);
+ if(len>.01){
+  dx/=len;dz/=len;
+  p.vx=dx*speed;p.vz=dz*speed;
+  p.x+=p.vx*dt;p.z+=p.vz*dt;
+  playerDirection(p,dx,dz);
+ }else{
+  p.vx*=.75;p.vz*=.75;
+ }
+ p.x=THREE.MathUtils.clamp(p.x,-50,50);
+ p.z=THREE.MathUtils.clamp(p.z,-32,32);
+ p.group.position.set(p.x,0,p.z);
+}
+function hasBall(p){return state.owner===p}
+
+function getInput(){
+ let x=joystick.x,y=joystick.y;
+ if(keys.KeyA||keys.ArrowLeft)x-=1;
+ if(keys.KeyD||keys.ArrowRight)x+=1;
+ if(keys.KeyW||keys.ArrowUp)y-=1;
+ if(keys.KeyS||keys.ArrowDown)y+=1;
+ return {x:THREE.MathUtils.clamp(x,-1,1),y:THREE.MathUtils.clamp(y,-1,1)};
+}
+
+function doPass(through=false,lob=false){
+ if(!selected)return;
+ if(state.owner!==selected){
+  if(distance(selected,ballGroup.position)<2.2)possession(selected);
+  else return;
+ }
+ const teammates=players.filter(p=>p.team===0&&p!==selected);
+ let target=teammates.sort((a,b)=>{
+  const da=distance(a,selected),db=distance(b,selected);
+  return through? (a.z-b.z)-(b.z-a.z):da-db;
+ })[0];
+ if(!target)return;
+ const dx=target.x-selected.x,dz=target.z-selected.z;
+ const len=Math.hypot(dx,dz)||1;
+ const power=through?19:14;
+ releaseBall(dx/len*power,dz/len*power,lob?7:1.2);
+ state.stats.passes++;
+ sound(through?620:500);
+}
+function doShoot(){
+ if(!selected)return;
+ if(state.owner!==selected){
+  if(distance(selected,ballGroup.position)<2.1)possession(selected);
+  else return;
+ }
+ const targetX=THREE.MathUtils.clamp(-ballGroup.position.x*.22,-2,2);
+ const dx=targetX-ballGroup.position.x;
+ const dz=-38-ballGroup.position.z;
+ const len=Math.hypot(dx,dz);
+ releaseBall(dx/len*27,dz/len*27,5.2);
+ state.stats.shots++;
+ sound(780,.16);
+}
+function doLob(){
+ if(!selected)return;
+ if(state.owner!==selected){
+  if(distance(selected,ballGroup.position)<2.2)possession(selected);
+  else return;
+ }
+ releaseBall(selected.dir.x*11,selected.dir.z*11,9);
+ state.stats.shots++;
+ sound(690);
+}
+function doTackle(){
+ if(!selected)return;
+ const enemy=nearestPlayer(1);
+ if(distance(selected,enemy)<2.8){
+  state.owner=selected;
+  state.stats.tackles++;
+  enemy.vx+=selected.dir.x*3;
+  enemy.vz+=selected.dir.z*3;
+  sound(230);
+ }
+}
+function doDribble(){
+ if(!selected)return;
+ if(distance(selected,ballGroup.position)<2.3){
+  possession(selected);
+  selected.stamina=Math.max(0,selected.stamina-3);
+ }
+}
+function switchPlayer(){
+ const target=nearestPlayer(0);
+ if(target)selected=target;
+}
+function handleAction(action){
+ if(state.paused||state.finished)return;
+ if(action==="pass")doPass(false,false);
+ if(action==="through")doPass(true,false);
+ if(action==="lob")doLob();
+ if(action==="shoot")doShoot();
+ if(action==="tackle")doTackle();
+ if(action==="dribble")doDribble();
+ if(action==="switch"){
+  const candidates=players.filter(p=>p.team===0);
+  candidates.sort((a,b)=>distance(a,ballGroup.position)-distance(b,ballGroup.position));
+  selected=candidates.find(p=>p!==selected)||selected;
+ }
+ if(action==="pause")togglePause();
+}
+document.querySelectorAll("[data-action]").forEach(button=>{
+ const action=button.dataset.action;
+ button.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+  if(action==="sprint"){keys.Space=true;return}
+  handleAction(action);
+ });
+ if(action==="sprint"){
+  button.addEventListener("pointerup",()=>keys.Space=false);
+  button.addEventListener("pointerleave",()=>keys.Space=false);
+  button.addEventListener("pointercancel",()=>keys.Space=false);
+ }
+});
+
+// جوی‌استیک لمسی
+const stickArea=$("stickArea"),stick=$("stick");
+let stickPointer=null;
+function updateStick(e){
+ const r=stickArea.getBoundingClientRect();
+ const cx=r.left+r.width/2,cy=r.top+r.height/2;
+ let dx=e.clientX-cx,dy=e.clientY-cy;
+ const max=48,len=Math.hypot(dx,dy);
+ if(len>max){dx=dx/len*max;dy=dy/len*max}
+ joystick.x=dx/max;joystick.y=dy/max;
+ stick.style.left=(r.width/2-28+dx)+"px";
+ stick.style.top=(r.height/2-28+dy)+"px";
+}
+stickArea.addEventListener("pointerdown",e=>{
+ stickPointer=e.pointerId;stickArea.setPointerCapture(e.pointerId);
+ joystick.active=true;updateStick(e);
+});
+stickArea.addEventListener("pointermove",e=>{
+ if(e.pointerId===stickPointer)updateStick(e);
+});
+function resetStick(){
+ stickPointer=null;joystick.x=0;joystick.y=0;joystick.active=false;
+ stick.style.left="44px";stick.style.top="44px";
+}
+stickArea.addEventListener("pointerup",resetStick);
+stickArea.addEventListener("pointercancel",resetStick);
+
+// صفحه کلید
+addEventListener("keydown",e=>{
+ keys[e.code]=true;
+ if(e.repeat)return;
+ if(e.code==="KeyJ")handleAction("pass");
+ if(e.code==="KeyK")handleAction("shoot");
+ if(e.code==="KeyI")handleAction("through");
+ if(e.code==="KeyL")handleAction("lob");
+ if(e.code==="KeyQ")handleAction("switch");
+ if(e.code==="KeyE")handleAction("tackle");
+ if(e.code==="KeyC")handleAction("dribble");
+ if(e.code==="Escape")togglePause();
+});
+addEventListener("keyup",e=>keys[e.code]=false);
+
+function togglePause(){
+ state.paused=!state.paused;
+ setMessage(state.paused?"⏸ بازی متوقف شد":"▶ ادامه بازی",1);
+}
+$("settingsBtn").onclick=()=>{$("panel").style.display="flex";state.paused=true};
+$("closePanel").onclick=()=>{$("panel").style.display="none";state.paused=false};
+$("difficulty").onchange=e=>state.difficulty=+e.target.value;
+$("duration").onchange=e=>state.duration=+e.target.value;
+$("crowdToggle").onchange=e=>{state.crowd=e.target.checked;crowd.visible=state.crowd};
+$("shadowToggle").onchange=e=>{renderer.shadowMap.enabled=e.target.checked;sun.castShadow=e.target.checked};
+$("practiceToggle").onchange=e=>{state.practice=e.target.checked;setMessage(state.practice?"حالت تمرینی":"مسابقه عادی",1)};
+$("soundToggle").onchange=e=>state.sound=e.target.checked;
+$("tactics").onchange=e=>state.tactics=e.target.value;
+$("cameraBtn").onclick=()=>{
+ state.cameraMode=(state.cameraMode+1)%3;
+ setMessage(["دوربین تعقیبی","دوربین تلویزیونی","دوربین نزدیک"][state.cameraMode],1);
+};
+$("restartBtn").onclick=()=>restartMatch();
+
 function resetPositions(){
- home.forEach(p=>{p.x=p.homeX;p.z=p.homeZ;p.vx=p.vz=0});
- away.forEach(p=>{p.x=p.homeX;p.z=p.homeZ;p.vx=p.vz=0});
- bp.set(0,.85,0);bv.set(0,0,0);owner=0;carrier=9;selected=9;
-}
-function takeBall(team,i){owner=team;carrier=i}
-function kick(power,lift,target){
- const p=home[selected];
- if(owner!==0&&distance(p,bp)>2.5){toast("به توپ نزدیک شو");return}
- let dx=target.x-bp.x,dz=target.z-bp.z,l=Math.hypot(dx,dz)||1;
- bv.set(dx/l*power,lift,dz/l*power);
- owner=-1;carrier=-1;
-}
-function pass(through=false){
- const p=home[selected];
- if(owner!==0&&distance(p,bp)>2.5){toast("توپ در اختیار شما نیست");return}
- const candidates=home.filter(q=>q.index!==selected).sort((a,b)=>{
-  const sa=Math.abs((a.x-p.x)-(through?12:5))*.7+distance(a,p)*.3;
-  const sb=Math.abs((b.x-p.x)-(through?12:5))*.7+distance(b,p)*.3;
-  return sa-sb;
+ players.forEach(p=>{
+  const f=formations[p.team][p.index];
+  p.x=f[0];p.z=f[1];p.vx=0;p.vz=0;
+  p.group.position.set(p.x,0,p.z);
  });
- const t=candidates[0];kick(through?12:10,through?1:.3,t);
+ selected=players.find(p=>p.team===0&&p.index===9);
 }
-function shoot(lob=false){
- const p=home[selected];
- if(owner!==0&&distance(p,bp)>2.5){toast("برای شوت به توپ نزدیک شو");return}
- const z=clamp(-p.z*.35+(Math.random()-.5)*5,-6.5,6.5);
- kick(lob?17:21,lob?7:2.5,{x:60,z});
+function restartMatch(){
+ state.score=[0,0];state.time=0;state.finished=false;
+ state.stats={passes:0,shots:0,goals:0,tackles:0};
+ resetPositions();ballGroup.position.set(0,.5,0);
+ state.ballV.set(0,0,0);state.vertical=0;
+ possession(players.find(p=>p.team===0&&p.index===9));
+ state.paused=false;
+ setMessage("شروع مسابقه!",1.5);
+ updateHUD();
 }
-function tackle(){
- const p=home[selected];
- const e=away.slice(1).sort((a,b)=>distance(a,p)-distance(b,p))[0];
- if(owner===1&&e&&distance(e,p)<3.2){
-  takeBall(0,selected);bp.set(p.x+1,.85,p.z);toast("توپ‌گیری موفق!");
- }else toast("حریف نزدیک نیست");
+function goal(team){
+ state.score[team]++;
+ state.stats.goals++;
+ setMessage(team===0?"⚽ گل برای AMIR FC!":"گل برای RIVALS!",2);
+ sound(880,.35);
+ restartAfterGoal();
 }
-function switchPlayer(){selected=nearestHome();toast("بازیکن "+(selected+1))}
-function moveToward(p,x,z,sp,dt){
- const dx=x-p.x,dz=z-p.z,l=Math.hypot(dx,dz);
- if(l>.1){p.vx+=(dx/l*sp-p.vx)*Math.min(1,dt*5);p.vz+=(dz/l*sp-p.vz)*Math.min(1,dt*5)}
- else{p.vx*=.8;p.vz*=.8}
-}
-function updatePlayers(dt){
- const p=home[selected];
- let ix=joystick.x,iz=joystick.y;
- if(keys.has("ArrowLeft")||keys.has("a"))ix--;
- if(keys.has("ArrowRight")||keys.has("d"))ix++;
- if(keys.has("ArrowUp")||keys.has("w"))iz--;
- if(keys.has("ArrowDown")||keys.has("s"))iz++;
- const il=Math.hypot(ix,iz);if(il>1){ix/=il;iz/=il}
- const boost=sprinting&&p.stamina>1?1.4:1;
- if(owner===0&&carrier===selected){
-  p.vx+=(ix*p.speed*boost-p.vx)*Math.min(1,dt*8);
-  p.vz+=(iz*p.speed*boost-p.vz)*Math.min(1,dt*8);
- }else moveToward(p,bp.x,bp.z,p.speed*boost,dt);
- home.forEach((q,i)=>{
-  if(i===selected)return;
-  let tx=q.homeX,tz=q.homeZ;
-  if(i===9||i===10){tx=clamp(q.homeX+Math.max(0,bp.x)*.35,-40,42);tz=q.homeZ}
-  moveToward(q,tx,tz,q.speed*.7,dt);
- });
- away.forEach((q,i)=>{
-  if(i===0)moveToward(q,clamp(bp.x,43,47),clamp(bp.z,-5,5),6.5,dt);
-  else if(owner!==1)moveToward(q,bp.x-2,bp.z,6.3,dt);
-  else moveToward(q,q.homeX+5,q.homeZ,5.5,dt);
- });
- [...home,...away].forEach(q=>{
-  q.x=clamp(q.x+q.vx*dt,-48,48);q.z=clamp(q.z+q.vz*dt,-29,29);
-  q.group.position.set(q.x,0,q.z);
-  if(Math.hypot(q.vx,q.vz)>.3)q.group.rotation.y=Math.atan2(q.vx,q.vz);
-  q.stamina=clamp(q.stamina+(q===p&&sprinting?-12:3)*dt,0,100);
- });
+function restartAfterGoal(){
+ state.owner=null;
+ state.ballV.set(0,0,0);state.vertical=0;
+ ballGroup.position.set(0,.5,0);
+ resetPositions();
+ possession(players.find(p=>p.team===0&&p.index===9));
 }
 function updateBall(dt){
- if(owner===0||owner===1){
-  const p=(owner===0?home:away)[carrier];
-  if(p){bp.x=p.x+Math.sin(p.group.rotation.y)*1.05;bp.z=p.z+Math.cos(p.group.rotation.y)*1.05;bp.y=.85}
+ const b=ballGroup.position;
+ if(state.owner){
+  const p=state.owner;
+  const ahead=1.05;
+  b.x=p.x+p.dir.x*ahead;
+  b.z=p.z+p.dir.z*ahead;
+  b.y=.5+Math.max(0,Math.sin(state.time*8)*.06);
+  state.ballV.set(p.vx,0,p.vz);
  }else{
-  bv.y-=18*dt;bp.addScaledVector(bv,dt);
-  if(bp.y<.85){bp.y=.85;if(bv.y< -1)bv.y*=-.48;else bv.y=0;bv.x*=.985;bv.z*=.985}
-  if(Math.abs(bp.z)>32){bp.z=clamp(bp.z,-32,32);bv.z*=-.65}
-  if(Math.abs(bp.x)>49){
-   if(Math.abs(bp.z)<8.1&&bp.y<5.2){
-    if(bp.x>0)homeScore++;else awayScore++;
-    toast("گــــل!");
-    resetPositions();
-   }else{bp.x=clamp(bp.x,-49,49);bv.x*=-.65}
+  b.x+=state.ballV.x*dt;
+  b.z+=state.ballV.z*dt;
+  state.vertical-=20*dt;
+  b.y+=state.vertical*dt;
+  if(b.y<.48){b.y=.48;state.vertical=Math.abs(state.vertical)*.48}
+  state.ballV.multiplyScalar(Math.pow(.985,dt*60));
+  if(Math.hypot(state.ballV.x,state.ballV.z)<.35&&b.y<.6){
+   state.ballV.set(0,0,0);
   }
-  [...home,...away].forEach(p=>{
-   const d=distance(p,bp);
-   if(d<1.35&&bp.y<2.1){
-    if(d>.01){bp.x=p.x+(bp.x-p.x)/d*1.35;bp.z=p.z+(bp.z-p.z)/d*1.35}
-    if(Math.hypot(bv.x,bv.z)<3.5)takeBall(p.team,p.index);
-    else{bv.x+=p.vx*.15;bv.z+=p.vz*.15}
+  // برخورد با بازیکنان و تصاحب توپ
+  for(const p of players){
+   if(distance(p,b)<1.15&&b.y<2.1){
+    if(!state.owner)possession(p);
+    break;
    }
-  });
-  if(owner===-1){
-   const defenders=home.slice().sort((a,b)=>distance(a,bp)-distance(b,bp));
-   const enemy=away.slice().sort((a,b)=>distance(a,bp)-distance(b,bp))[0];
-   if(enemy&&distance(enemy,bp)<1.4&&Math.random()<dt*1.2)takeBall(1,enemy.index);
-   if(defenders[0]&&distance(defenders[0],bp)<1.2&&Math.random()<dt*1.2){takeBall(0,defenders[0].index);selected=defenders[0].index}
   }
  }
- ball.position.copy(bp);
- ball.rotation.x+=bv.z*dt;ball.rotation.z-=bv.x*dt;
- shadow.position.set(bp.x,.04,bp.z);
- shadow.scale.setScalar(clamp(1.1-bp.y*.035,.55,1));
+ b.x=THREE.MathUtils.clamp(b.x,-53,53);
+ if(Math.abs(b.z)>35.2){
+  if(Math.abs(b.x)<4.7&&b.y<5){
+   goal(b.z<0?0:1);return;
+  }
+  b.z=Math.sign(b.z)*34.8;
+  state.ballV.z*=-.65;
+ }
+ if(Math.abs(b.x)>53)state.ballV.x*=-.65;
+ ballGroup.rotation.x+=state.ballV.z*dt;
+ ballGroup.rotation.z-=state.ballV.x*dt;
+ shadow.position.set(b.x,.025,b.z);
+ shadow.scale.setScalar(1/(1+b.y*.12));
 }
+
+function updatePlayers(dt){
+ const input=getInput();
+ const sprint=keys.Space&&selected.stamina>1;
+ let speed=sprint?10.5:6.3;
+ if(selected.stamina<10)speed*=.7;
+ if(selected){
+  movePlayer(selected,input.x,-input.y,dt,speed);
+  if(sprint&&Math.hypot(input.x,input.y)>.1)
+   selected.stamina=Math.max(0,selected.stamina-17*dt);
+  else selected.stamina=Math.min(100,selected.stamina+7*dt);
+ }
+ for(const p of players){
+  if(p===selected)continue;
+  let dx=0,dz=0;
+  const b=ballGroup.position;
+  const d=distance(p,b);
+  if(p.team===1){
+   if(d<24||!state.owner){
+    dx=b.x-p.x;dz=b.z-p.z;
+   }else{
+    dx=p.formationX-p.x;dz=p.formationZ-p.z;
+   }
+  }else{
+   if(state.owner&&state.owner.team===0){
+    dx=p.formationX-p.x;dz=p.formationZ-p.z;
+    if(state.tactics==="attack")dz-=2;
+    if(state.tactics==="defend")dz+=2;
+   }else if(d<15){
+    dx=b.x-p.x;dz=b.z-p.z;
+   }else{
+    dx=p.formationX-p.x;dz=p.formationZ-p.z;
+   }
+  }
+  if(p.keeper){
+   dx=THREE.MathUtils.clamp(b.x-p.x,-5,5);
+   dz=(p.team===0?27:-27)-p.z;
+   if(Math.abs(b.z-p.z)<10)dz=b.z-p.z;
+  }
+  const len=Math.hypot(dx,dz);
+  const aiSpeed=5.2*state.difficulty*(p.keeper?1.15:1);
+  if(len>.6)movePlayer(p,dx,dz,dt,Math.min(aiSpeed,len*1.5));
+  else movePlayer(p,0,0,dt,0);
+  if(p.team===1&&d<1.5&&Math.random()<.018*state.difficulty){
+   possession(p);
+  }
+  // حرکت پا و دست
+  const moving=Math.hypot(p.vx,p.vz)>.5;
+  const swing=moving?Math.sin(state.time*12+p.index)*.45:0;
+  p.leftLeg.rotation.x=swing;
+  p.rightLeg.rotation.x=-swing;
+  p.leftArm.rotation.x=-swing*.55;
+  p.rightArm.rotation.x=swing*.55;
+ }
+ // جلوگیری از روی هم افتادن بازیکنان
+ for(let i=0;i<players.length;i++){
+  for(let j=i+1;j<players.length;j++){
+   const a=players[i],b=players[j];
+   const dx=b.x-a.x,dz=b.z-a.z;
+   const d=Math.hypot(dx,dz);
+   if(d>0&&d<.85){
+    const push=(.85-d)*.5;
+    a.x-=dx/d*push;b.x+=dx/d*push;
+    a.z-=dz/d*push;b.z+=dz/d*push;
+    a.group.position.set(a.x,0,a.z);
+    b.group.position.set(b.x,0,b.z);
+   }
+  }
+ }
+}
+
 function updateCamera(dt){
- let target=new THREE.Vector3();
- if(cameraMode===1){
-  camera.position.lerp(new THREE.Vector3(0,72,85),Math.min(1,dt*2));camera.lookAt(0,0,0);
+ const b=ballGroup.position;
+ let targetX,targetZ,targetY;
+ if(state.cameraMode===0){
+  const focus=selected||players[9];
+  targetX=focus.x*.35+b.x*.65;
+  targetZ=focus.z+19;
+  targetY=17;
+ }else if(state.cameraMode===1){
+  targetX=b.x*.25;
+  targetZ=12;
+  targetY=38;
  }else{
-  target.set((home[selected].x+bp.x)/2,0,(home[selected].z+bp.z)/2);
-  const d=cameraMode===2?new THREE.Vector3(bp.x-18,25,bp.z+27):new THREE.Vector3(target.x-3,42,target.z+43);
-  camera.position.lerp(d,Math.min(1,dt*2.8));camera.lookAt(target);
+  targetX=b.x;
+  targetZ=b.z+11;
+  targetY=10;
  }
+ const desired=new THREE.Vector3(targetX,targetY,targetZ);
+ camera.position.lerp(desired,Math.min(1,dt*2.8));
+ camera.lookAt(b.x*.45,0,b.z*.35);
 }
+
+function updateHUD(){
+ $("score").textContent=state.score[0]+" - "+state.score[1];
+ $("clock").textContent=String(Math.floor(state.time)).padStart(2,"0")+":00".slice(2);
+ $("passes").textContent=state.stats.passes;
+ $("shots").textContent=state.stats.shots;
+ $("goals").textContent=state.stats.goals;
+ $("tackles").textContent=state.stats.tackles;
+ const ours=state.owner?state.owner.team===0:0;
+ $("possession").textContent=ours?"AMIR FC":"RIVALS";
+ $("stamina").style.width=(selected?selected.stamina:100)+"%";
+}
+
 function drawRadar(){
- const c=$("radar").getContext("2d");c.clearRect(0,0,250,148);
- c.fillStyle="#176d3e";c.fillRect(0,0,250,148);
- c.strokeStyle="#fff";c.lineWidth=2;c.strokeRect(2,2,246,144);
- c.beginPath();c.moveTo(125,0);c.lineTo(125,148);c.stroke();
- c.beginPath();c.arc(125,74,18,0,Math.PI*2);c.stroke();
- function d(p,color,r=4){c.fillStyle=color;c.beginPath();c.arc(125+p.x*2.35,74+p.z*2.1,r,0,7);c.fill()}
- home.forEach(p=>d(p,"#45a5ff"));away.forEach(p=>d(p,"#ff5656"));d(bp,"white",4);
-}
-const bind=(id,fn)=>$(id).addEventListener("pointerdown",e=>{e.preventDefault();fn()});
-bind("pass",()=>pass(false));bind("through",()=>pass(true));
-bind("shoot",()=>shoot(false));bind("lob",()=>shoot(true));
-bind("switch",switchPlayer);bind("tackle",tackle);
-bind("dribble",()=>{toast("دریبل فعال");home[selected].speed=10;setTimeout(()=>home[selected].speed=8.2,900)});
-$("sprint").addEventListener("pointerdown",()=>sprinting=true);
-["pointerup","pointercancel","pointerleave"].forEach(e=>$("sprint").addEventListener(e,()=>sprinting=false));
-let stickPointer=null;
-function setStick(e){
- const r=$("stickBase").getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
- let x=e.clientX-cx,y=e.clientY-cy,l=Math.hypot(x,y),m=43;
- if(l>m){x=x/l*m;y=y/l*m}
- joystick.x=x/m;joystick.y=y/m;
- $("stick").style.left=45+x+"px";$("stick").style.top=45+y+"px";
-}
-$("stickArea").addEventListener("pointerdown",e=>{stickPointer=e.pointerId;$("stickArea").setPointerCapture(e.pointerId);setStick(e)});
-$("stickArea").addEventListener("pointermove",e=>{if(e.pointerId===stickPointer)setStick(e)});
-function releaseStick(){stickPointer=null;joystick.x=joystick.y=0;$("stick").style.left="45px";$("stick").style.top="45px"}
-$("stickArea").addEventListener("pointerup",releaseStick);
-$("stickArea").addEventListener("pointercancel",releaseStick);
-window.addEventListener("keydown",e=>{
- keys.add(e.key);
- if(e.key===" ")shoot();
- if(e.key==="e")pass();
- if(e.key==="q")switchPlayer();
- if(e.key==="p"||e.key==="Escape")togglePause();
-});
-window.addEventListener("keyup",e=>keys.delete(e.key));
-function togglePause(){
- if(!running||finished)return;
- paused=!paused;$("pause").textContent=paused?"▶ ادامه":"Ⅱ توقف";
-}
-$("pause").onclick=togglePause;
-$("cameraBtn").onclick=()=>{cameraMode=(cameraMode+1)%3;toast("دوربین "+(cameraMode+1))};
-$("settingsBtn").onclick=()=>{$("settings").style.display="flex";paused=true};
-$("closeSettings").onclick=()=>{
- duration=Number($("duration").value);speedScale=Number($("speed").value);
- $("settings").style.display="none";paused=false;
-};
-function startGame(){
- $("overlay").style.display="none";running=true;paused=false;finished=false;
- duration=Number($("duration").value);speedScale=Number($("speed").value);
-}
-$("start").onclick=startGame;
-function endGame(){
- running=false;finished=true;
- $("overlay").style.display="flex";
- $("overlay").querySelector("h1").textContent="پایان مسابقه";
- $("overlay").querySelector("p").innerHTML="نتیجه: AMIR FC "+homeScore+" - "+awayScore+" RIVALS<br>AMIRREZA GHOLAMI";
- $("start").textContent="مسابقه دوباره";
- $("start").onclick=()=>{
-  homeScore=awayScore=elapsed=0;resetPositions();updateHUD();
-  $("overlay").querySelector("h1").textContent="⚽ AMIR FOOTBALL 3D";
-  $("overlay").querySelector("p").innerHTML="AMIR FC در برابر RIVALS<br>Created by AMIRREZA GHOLAMI";
-  $("start").textContent="شروع مسابقه";$("start").onclick=startGame;
- };
-}
-let previous=performance.now();
-function animate(now){
- requestAnimationFrame(animate);
- const raw=Math.min((now-previous)/1000,.05);previous=now;
- if(running&&!paused&&!finished){
-  const dt=raw*speedScale;elapsed+=dt;
-  updatePlayers(dt);updateBall(dt);updateCamera(dt);updateHUD();
-  if(elapsed>=duration)endGame();
+ const c=$("radarCanvas"),ctx=c.getContext("2d");
+ ctx.clearRect(0,0,c.width,c.height);
+ ctx.fillStyle="#1b7139";ctx.fillRect(0,0,c.width,c.height);
+ ctx.strokeStyle="#d8f5df";ctx.lineWidth=2;
+ ctx.strokeRect(2,2,c.width-4,c.height-4);
+ ctx.beginPath();ctx.moveTo(c.width/2,0);ctx.lineTo(c.width/2,c.height);ctx.stroke();
+ ctx.beginPath();ctx.arc(c.width/2,c.height/2,18,0,Math.PI*2);ctx.stroke();
+ for(const p of players){
+  ctx.fillStyle=p.team===0?"#55baff":"#ff6666";
+  const x=(p.x+53)/106*c.width;
+  const y=(p.z+35)/70*c.height;
+  ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();
  }
- if(toastTime>0){toastTime-=raw;if(toastTime<=0)$("toast").style.display="none"}
- drawRadar();renderer.render(scene,camera);
+ ctx.fillStyle="white";
+ ctx.beginPath();
+ ctx.arc((ballGroup.position.x+53)/106*c.width,(ballGroup.position.z+35)/70*c.height,4,0,Math.PI*2);
+ ctx.fill();
 }
-window.addEventListener("resize",()=>{
- camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+
+function frame(now){
+ requestAnimationFrame(frame);
+ const dt=Math.min((now-lastTime)/1000,.04);
+ lastTime=now;
+ if(!state.paused&&!state.finished){
+  if(!state.practice){
+   state.time+=dt*60/state.duration;
+   if(state.time>=300){state.finished=true;setMessage("پایان مسابقه",4)}
+  }
+  updatePlayers(dt);
+  updateBall(dt);
+  updateCamera(dt);
+  if(kickOffMessage>0){
+   kickOffMessage-=dt;
+   if(kickOffMessage<=0)$("message").textContent="";
+  }
+ }
+ updateHUD();
+ drawRadar();
+ renderer.render(scene,camera);
+}
+restartMatch();
+requestAnimationFrame(frame);
+
+addEventListener("resize",()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
 });
-updateHUD();requestAnimationFrame(animate);
+})();
 </script>
 </body>
 </html>
