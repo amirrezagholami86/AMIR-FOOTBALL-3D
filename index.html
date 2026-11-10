@@ -598,25 +598,44 @@ function releaseJoy(){
 joy.addEventListener('pointerup',releaseJoy);
 joy.addEventListener('pointercancel',releaseJoy);
 
-// BUTTONS
-document.getElementById('pass').addEventListener('pointerdown',e=>{
- e.preventDefault();if(playing&&!paused)passBall();
+
+// BUTTONS - FIXED MOBILE CONTROLS
+
+const passButton = document.getElementById('pass');
+const shootButton = document.getElementById('shoot');
+const switchButton = document.getElementById('switch');
+const sprintButton = document.getElementById('sprint');
+
+passButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!playing || paused) return;
+  passBall();
 });
-document.getElementById('shoot').addEventListener('pointerdown',e=>{
- e.preventDefault();if(playing&&!paused)shootBall();
+
+shootButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!playing || paused) return;
+  shootBall();
 });
-document.getElementById('switch').addEventListener('pointerdown',e=>{
- e.preventDefault();if(playing&&!paused)switchPlayer();
+
+switchButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!playing || paused) return;
+  switchPlayer();
 });
-document.getElementById('sprint').addEventListener('pointerdown',()=>{
- sprint=true;
+
+sprintButton.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  if (playing && !paused) sprint = true;
 });
-document.getElementById('sprint').addEventListener('pointerup',()=>{
- sprint=false;
-});
-document.getElementById('sprint').addEventListener('pointercancel',()=>{
- sprint=false;
-});
+
+function stopSprint() {
+  sprint = false;
+}
+
+sprintButton.addEventListener('pointerup', stopSprint);
+sprintButton.addEventListener('pointercancel', stopSprint);
+sprintButton.addEventListener('pointerleave', stopSprint);
 
 // START
 document.getElementById('play').onclick=()=>{
